@@ -1,0 +1,49 @@
+#!/bin/bash
+IFS=$'\n'
+PROJECT_PATH=${1-"./"}
+
+cd $PROJECT_PATH
+
+STATUS=`git status`
+EXIT_CODE=$?
+if [ "$EXIT_CODE" != 0 ]; then
+    echo $STATUS
+    exit 128
+fi
+
+function not_is_binary_file() {
+    TYPE=`file -i ${1} | grep -Po 'charset=\K[^"]*'`
+    if [ $TYPE == "binary" ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+# remove binary file from list
+function filter_file_list() {
+    NEWLIST=()
+    for i in ${1}; do        
+        if not_is_binary_file $i ; then
+            NEWLIST+=($i)
+        fi
+    done
+    ALL_FILES=`printf -- '%s\n' "${NEWLIST[@]}"`
+}
+
+AUTHORS=`git log --format='%aN' | sort -u`
+ALL_FILES=`git ls-tree --name-only -r HEAD`
+filter_file_list "${ALL_FILES}"
+FILES_COUNT=`git ls-tree --name-only -r HEAD | wc -l`
+ALL_LINES=`cat ${ALL_FILES} | wc -l`
+
+for author in ${AUTHORS}; do
+    LINES_PER_AUTHOR=0
+    for file in ${ALL_FILES}; do
+        LINES_IN_FILE=`git blame ${file} | grep ${author} | wc -l`
+        LINES_PER_AUTHOR=$(($LINES_PER_AUTHOR + $LINES_IN_FILE))
+    done
+    PERCENT=$(echo "scale=4; $LINES_PER_AUTHOR / $ALL_LINES * 100" | bc )
+    printf "${author}:\n\tlines: ${LINES_PER_AUTHOR}\n\tparticipation: ${PERCENT}%%\n\n"
+done
+printf "Summary:\n\tline: ${ALL_LINES}\n\tfiles: ${FILES_COUNT}\n"
