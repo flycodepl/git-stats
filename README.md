@@ -1,5 +1,6 @@
 git-state
 ======
+Show basic statistic for your project
 
 INSTALL
 ======
