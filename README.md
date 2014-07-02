@@ -14,7 +14,7 @@ Usage
 
 ```sh
 $ cd path/to/your/project
-$ git state
+$ git stats
 
 Paul Peter Flis:
 	lines: 57
@@ -26,4 +26,4 @@ Summary:
 
 ```
 
-
+<sup>Donate me - bitcoin: 1PETERiwCxetYujY5JNGt4dP3i94kH2g6w</sup>
