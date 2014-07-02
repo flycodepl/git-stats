@@ -6,7 +6,7 @@ INSTALL
 ======
 
 ```sh
-$ curl https://github.com/flycodepl/git-stats/raw/master/install | sh
+$ curl -L https://github.com/flycodepl/git-stats/raw/master/install | sh
 ```
 
 Usage
