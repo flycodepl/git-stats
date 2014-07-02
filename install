@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "Install..."
+sudo wget -q https://github.com/flycodepl/git-stats/raw/master/git-stats /tmp/git-stats -O /usr/local/bin/git-stats
+sudo chmod a+x /usr/local/bin/git-stats
+echo "Finish! Thank you!"
+echo "Now you can use: git stats"
+
